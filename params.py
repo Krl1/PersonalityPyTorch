@@ -3,7 +3,7 @@ RANDOM_SEED = 42
 
 class WandbConfig:
     project_name = 'personality'
-    run_name = 'cnn4_pytorch_test'
+    run_name = 'cnn4_pytorch_connected'
     save_dir = '.'
     entity = 'krl1'
 
@@ -11,9 +11,9 @@ class WandbConfig:
 class LocationConfig:
     checkpoints_dir = 'model/checkpoints'
     best_model = 'model/best.pt'
-    data = 'data'
-    train_data = 'data/train'
-    test_data = 'data/test'
+    data = 'data_connected'
+    train_data = 'data_connected/train'
+    test_data = 'data_connected/test'
     
     
 class TrainingConfig:
@@ -22,5 +22,5 @@ class TrainingConfig:
     gpus = 1
     deterministic = True
     accumulate_grad_batches = 2
-    patience = 3
-    lr = 10e-6
+    patience = 15
+    lr = 1e-6

@@ -37,7 +37,7 @@ class Datamodule(pl.LightningDataModule):
             batch_size=self.batch_size,
             shuffle=True,
             num_workers=4,
-            collate_fn=Datamodule._my_collate,
+            #collate_fn=Datamodule._my_collate,
         )
 
     def val_dataloader(self):

@@ -25,8 +25,12 @@ def get_all_checkpoints():
 
 
 def init_CNN4() -> CNN4:
-    cnn4 = CNN4(lr=TrainingConfig.lr)
+    list_of_checkpoints = get_all_checkpoints()
+    latest_checkpoint_path = max(list_of_checkpoints, key=lambda p: p.stat().st_ctime)
 
+    cnn4 = CNN4(lr=TrainingConfig.lr)
+    state_dict = torch.load(LocationConfig.best_model)
+    cnn4.load_state_dict(state_dict)
     return cnn4
 
 

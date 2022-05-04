@@ -56,7 +56,7 @@ class CNN4(pl.LightningModule):
         return torch.optim.Adam(self.parameters(), lr=self.lr)
     
     def training_step(self, batch, batch_idx):
-        x, y = batch
+        x, y = batch['normalized'], batch['label']
         y_pred = self.forward(x)
         y = torch.tensor(y, dtype=torch.float32, device=y_pred.device)
 
@@ -71,10 +71,11 @@ class CNN4(pl.LightningModule):
     def training_epoch_end(self, outputs):
         accuracy = self.train_accuracy.compute()
         print(f"Train Accuracy: {accuracy}")
-        self.log('Train_acc_epoch', accuracy, prog_bar=True)
+        self.log('train_loss_epoch', outputs[0]['loss'].item(), prog_bar=True)
+        self.log('train_acc_epoch', accuracy, prog_bar=True)
     
     def validation_step(self, batch, batch_idx):
-        x, y = batch
+        x, y = batch['normalized'], batch['label']
         y_pred = self.forward(x)
         y = torch.tensor(y, dtype=torch.float32, device=y_pred.device)
 
@@ -88,5 +89,5 @@ class CNN4(pl.LightningModule):
     
     def validation_epoch_end(self, outputs):
         accuracy = self.val_accuracy.compute()
-
+        self.log('val_loss_epoch', outputs[0]['loss'].item(), prog_bar=True)
         self.log('val_acc_epoch', accuracy, prog_bar=True)
