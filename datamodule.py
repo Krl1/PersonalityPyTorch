@@ -26,8 +26,9 @@ class Datamodule(pl.LightningDataModule):
         self.train_dir = train_dir
         self.val_dir = val_dir
 
-    def setup(self, stage=None):
-        self.train_set = PersonalityDataset(self.train_dir)
+    def setup(self, val_only=False, stage=None):
+        if not val_only:
+            self.train_set = PersonalityDataset(self.train_dir)
         self.val_set = PersonalityDataset(self.val_dir)
 
     def train_dataloader(self):
@@ -45,7 +46,7 @@ class Datamodule(pl.LightningDataModule):
             batch_size=self.batch_size,
             shuffle=False,
             num_workers=4,
-            collate_fn=Datamodule._my_collate,
+            #collate_fn=Datamodule._my_collate,
         )
 
     @staticmethod

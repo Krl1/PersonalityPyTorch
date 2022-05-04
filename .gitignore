@@ -1,6 +1,7 @@
 wandb/
 model/
 data/
+data_connected/
 lightning_logs/
 tmp.ipynb
 
