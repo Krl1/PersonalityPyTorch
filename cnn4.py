@@ -22,20 +22,17 @@ class CNN4(pl.LightningModule):
         self.conv = nn.Sequential()
         self.conv.add_module(
             f"conv_0", 
-            nn.Conv2d(1, fm_size, 3, padding=1)
+            nn.Conv2d(1, fm_size, (3,3), padding=1)
         )
         self.conv.add_module(f"relu_0", nn.ReLU())
         self.conv.add_module(f"max_pool_0", nn.MaxPool2d(2))
-        for i in range(1, 8):
-            self.conv.add_module(
-                f"conv_{i}", 
-                nn.Conv2d(fm_size, fm_size*2, 3, stride=1, padding='same')
-            )
-            self.conv.add_module(f"relu_{i}", nn.ReLU())
-            pad = 1 if i in [4, 5] else 0
-            self.conv.add_module(f"max_pool_{i}", nn.MaxPool2d(2, padding=pad))
-            fm_size *= 2
         
+        for i in range(1, 8):
+            self.conv.add_module(f"conv_{i}", nn.Conv2d(fm_size, fm_size*2, (3,3), stride=1, padding='same'))
+            self.conv.add_module(f"relu_{i}", nn.ReLU())
+            self.conv.add_module(f"max_pool_{i}", nn.MaxPool2d((2,2), ceil_mode=True))
+            fm_size *= 2
+            
         self.linear = nn.Sequential() 
         self.linear.add_module("flatten", nn.Flatten())
         self.linear.add_module("linear_0", nn.Linear(fm_size, 50))
@@ -43,7 +40,7 @@ class CNN4(pl.LightningModule):
         self.linear.add_module("linear_1", nn.Linear(50, 50))
         self.linear.add_module(f"relu_0", nn.ReLU())
         self.linear.add_module("linear_2", nn.Linear(50, 5))
-        self.linear.add_module(f"sigmoid", nn.Sigmoid())
+        # self.linear.add_module(f"sigmoid", nn.Sigmoid())
 
     
     def forward(self, x):
