@@ -20,6 +20,8 @@ class PersonalityDataset(Dataset):
             pic = pickle.load(open(file, "rb"))
             self.faces_list['X'].extend(np.array(pic['X'], dtype='f'))
             self.faces_list['Y'].extend(np.array(pic['Y']))
+        # self.faces_list['X'] = self.faces_list['X'][:300] 
+        # self.faces_list['Y'] = self.faces_list['Y'][:300]
                 
 
     def __getitem__(self, index):

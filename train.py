@@ -72,8 +72,12 @@ def run_train(dm: Datamodule, model: CNN4):
         max_epochs=TrainingConfig.epochs,
         gpus=TrainingConfig.gpus,
         deterministic=TrainingConfig.deterministic,
-        accumulate_grad_batches=TrainingConfig.accumulate_grad_batches,
-        callbacks=[earlyStopping, modelCheckpoint],
+    	#early_stop_callback=None,
+#    	no_validation=True,
+	limit_val_batches=0,
+	num_sanity_val_steps=0,
+#        accumulate_grad_batches=TrainingConfig.accumulate_grad_batches,
+#        callbacks=[earlyStopping, modelCheckpoint],
         logger=wandb_logger,
     )
 

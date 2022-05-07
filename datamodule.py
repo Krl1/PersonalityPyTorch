@@ -36,7 +36,7 @@ class Datamodule(pl.LightningDataModule):
             self.train_set,
             batch_size=self.batch_size,
             shuffle=True,
-            num_workers=4,
+            num_workers=1,
             #collate_fn=Datamodule._my_collate,
         )
 
@@ -45,7 +45,7 @@ class Datamodule(pl.LightningDataModule):
             self.val_set,
             batch_size=self.batch_size,
             shuffle=False,
-            num_workers=4,
+            num_workers=1,
             #collate_fn=Datamodule._my_collate,
         )
 
