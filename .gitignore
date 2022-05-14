@@ -4,6 +4,8 @@ data/
 data_connected/
 dataset/
 lightning_logs/
+personality/
+small_data/
 tmp.ipynb
 
 
