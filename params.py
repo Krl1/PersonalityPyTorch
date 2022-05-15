@@ -2,8 +2,8 @@ RANDOM_SEED = 42
 
 
 class WandbConfig:
-    project_name = 'personality'
-    run_name = 'cnn4_1e-5_relu_batchNorm_dropout_01_withoutLin1_range7'
+    project_name = 'personality_connected'
+    run_name = 'cnn4_1e-5'
     save_dir = '.'
     entity = 'krl1'
 
@@ -16,7 +16,7 @@ class CreateDataConfig:
 
 
 class LocationConfig:
-    raw_data = '/media/karol/HDD2/uczelnia_dane/magisterka/personality/dataset/'
+    raw_data = 'dataset/'
     new_data = './new_data/'
     checkpoints_dir = 'model/checkpoints'
     best_model = 'model/best.pt'

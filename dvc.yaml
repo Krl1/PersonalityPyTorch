@@ -1,4 +1,3 @@
-
 vars:
   - params.py:RANDOM_SEED,LocationConfig,CreateDataConfig,TrainingConfig,WandbConfig
 
