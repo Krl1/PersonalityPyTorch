@@ -6,6 +6,7 @@ dataset/
 lightning_logs/
 personality/
 small_data/
+new_data/
 tmp.ipynb
 
 

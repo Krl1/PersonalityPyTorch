@@ -3,24 +3,34 @@ RANDOM_SEED = 42
 
 class WandbConfig:
     project_name = 'personality'
-    run_name = 'cnn4_pytorch_normalize'
+    run_name = 'cnn4_1e-5_relu_batchNorm_dropout_01_withoutLin1_range7'
     save_dir = '.'
     entity = 'krl1'
 
 
+class CreateDataConfig:
+    connect = True
+    test_size_ratio = 0.09
+    classification = False
+    Y_threshold = 0.5
+
+
 class LocationConfig:
+    raw_data = '/media/karol/HDD2/uczelnia_dane/magisterka/personality/dataset/'
+    new_data = './new_data/'
     checkpoints_dir = 'model/checkpoints'
     best_model = 'model/best.pt'
-    data = 'small_data'
-    train_data = 'small_data'
-    test_data = 'small_data'
     
     
 class TrainingConfig:
-    batch_size = 2
-    epochs = 10000
+    batch_size = 32
+    epochs = 100
     gpus = 1
     deterministic = True
     accumulate_grad_batches = 1
-    patience = 10
-    lr = 1e-6
+    patience = 5
+    lr = 1e-5
+    batch_norm = True
+    negative_slope = 0.0
+    sigmoid = False
+    max_pool_ceil_mode = False

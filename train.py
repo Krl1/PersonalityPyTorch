@@ -11,6 +11,7 @@ from datamodule import Datamodule
 from params import (
     RANDOM_SEED,
     LocationConfig,
+    CreateDataConfig,
     TrainingConfig,
     WandbConfig,
 )
@@ -25,7 +26,14 @@ def get_all_checkpoints():
 
 
 def init_CNN4() -> CNN4:
-    cnn4 = CNN4(lr=TrainingConfig.lr)
+    cnn4 = CNN4(
+        lr=TrainingConfig.lr,
+        batch_norm=TrainingConfig.batch_norm,
+        negative_slope=TrainingConfig.negative_slope,
+        sigmoid=TrainingConfig.sigmoid,
+        max_pool_ceil_mode = TrainingConfig.max_pool_ceil_mode,
+        classification = CreateDataConfig.classification
+        )
 
     return cnn4
 
@@ -72,12 +80,8 @@ def run_train(dm: Datamodule, model: CNN4):
         max_epochs=TrainingConfig.epochs,
         gpus=TrainingConfig.gpus,
         deterministic=TrainingConfig.deterministic,
-    	#early_stop_callback=None,
-#    	no_validation=True,
-	limit_val_batches=0,
-	num_sanity_val_steps=0,
-#        accumulate_grad_batches=TrainingConfig.accumulate_grad_batches,
-#        callbacks=[earlyStopping, modelCheckpoint],
+        accumulate_grad_batches=TrainingConfig.accumulate_grad_batches,
+        callbacks=[earlyStopping, modelCheckpoint],
         logger=wandb_logger,
     )
 
