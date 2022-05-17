@@ -3,7 +3,7 @@ import os
 import insightface
 import numpy as np
 
-model_detector_path = '/home/karol/.insightface/models/buffalo_l/det_10g.onnx'
+model_detector_path = './det_10g.onnx'
 
 
 class FaceDetection:

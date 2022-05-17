@@ -1,4 +1,6 @@
 import pickle
+import fnmatch
+import os
 from sklearn.model_selection import train_test_split
 from pathlib import Path
 import cv2
@@ -29,12 +31,12 @@ def create_mean_video_name_df(df):
     
 
 def create_conntected_dataset():
-    df = pd.read_csv(LocationConfig.raw_data + 'bigfive_labels.csv')
+    df = pd.read_csv(LocationConfig.labels + 'bigfive_labels.csv')
 
     df['ShortVideoName'] = get_short_video_name(df['VideoName'])
 
     mean_df = create_mean_video_name_df(df)
-    mean_df.to_csv(LocationConfig.raw_data + 'bigfive_labels_mean.csv')
+    mean_df.to_csv(LocationConfig.labels + 'bigfive_labels_mean.csv')
     mean_df = mean_df.set_index('ShortVideoName')
     
     X_train, X_test = train_test_split(
@@ -44,8 +46,10 @@ def create_conntected_dataset():
     )
     images_dict_train = {'X':[], 'Y':[]}
     images_dict_test = {'X':[], 'Y':[]}
-    for image_path in tqdm(Path(LocationConfig.raw_data).glob('*/*.jpg'), total=30935):
-        X = cv2.imread(str(image_path))    
+    total_files = len(fnmatch.filter(os.listdir(LocationConfig.crop_data), '*.jpg'))
+    for image_path in tqdm(Path(LocationConfig.crop_data).glob('*.jpg'), total=total_files):
+        X = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE) 
+        X = np.expand_dims(X, axis=2) 
         image_group = image_path.name.split('.')[0]
         image_no = image_path.name.split('.')[2][-5:]
         Y = mean_df.loc[image_group].values

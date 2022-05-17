@@ -26,8 +26,6 @@ class PersonalityDataset(Dataset):
 
     def __getitem__(self, index):
         image = self.faces_list['X'][index]
-        if image.shape != (208, 208, 1):
-            image = PersonalityDataset._resize(image)
         label = self.faces_list['Y'][index]
         normalized = PersonalityDataset._normalize(image.copy())
         return {
@@ -38,15 +36,7 @@ class PersonalityDataset(Dataset):
 
     def __len__(self):
         return len(self.faces_list['Y'])
-    
-    @staticmethod
-    def _resize(image: np.ndarray) -> np.ndarray:
-        img = Image.fromarray(np.array(image).astype(np.uint8))
-        img = img.resize((208, 208), Image.ANTIALIAS)
-        img = np.array(ImageOps.grayscale(img))
-        img = np.expand_dims(img, axis=2)
-        return img.astype(np.float32)
-    
+      
     @staticmethod
     def _normalize(image: np.ndarray) -> np.ndarray:
         image -= image.min()
