@@ -8,7 +8,9 @@ personality/
 small_data/
 new_data/
 tmp.ipynb
-
+my_data/
+old_data/
+shuffle_data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

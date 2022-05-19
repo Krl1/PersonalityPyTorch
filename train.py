@@ -51,7 +51,7 @@ def save_model_from_last_checkpoint_as_state_dict() -> None:
     print("Saved the latest model at:", best_model_path)
 
 
-def run_train(dm: Datamodule, model: CNN4, run_name: str):
+def run_train(dm: Datamodule, model: CNN4):
 
     chkp_dir = Path(LocationConfig.checkpoints_dir)
     modelCheckpoint = ModelCheckpoint(
@@ -70,7 +70,7 @@ def run_train(dm: Datamodule, model: CNN4, run_name: str):
     wandb_logger = WandbLogger(
         project=WandbConfig.project_name,
         save_dir=WandbConfig.save_dir,
-        name=run_name,
+        name=WandbConfig.run_name,
         entity=WandbConfig.entity,
     )
 
@@ -87,10 +87,8 @@ def run_train(dm: Datamodule, model: CNN4, run_name: str):
     trainer.fit(model, dm)
 
     # Save model
-    # save_model_from_last_checkpoint_as_state_dict()
+    save_model_from_last_checkpoint_as_state_dict()
     
-    wandb.finish()
-
     
 def sweep_iteration():
     
@@ -133,7 +131,7 @@ def sweep_iteration():
         batch_norm=TrainingConfig.batch_norm, 
         lr=wandb.config.lr, 
         negative_slope=TrainingConfig.negative_slope, 
-        dropout=TrainingConfig.dropout,
+        dropout=wandb.config.dropout,
         batch_size = wandb.config.batch_size
     )
 
@@ -167,21 +165,29 @@ if __name__ == "__main__":
         train_dir=train_data_path,
         val_dir=test_data_path,
     )
+    model = init_CNN4(
+        lr=TrainingConfig.lr, 
+        batch_norm=TrainingConfig.batch_norm, 
+        negative_slope=TrainingConfig.negative_slope, 
+        dropout=TrainingConfig.dropout, 
+        batch_size=TrainingConfig.batch_size
+    )
+    run_train(dm, model)
     
-    sweep_config = {
-      "method": "grid",   # Random search
-      "metric": {           # We want to maximize val_acc
-          "name": "val_loss_epoch",
-          "goal": "minimize"
-      },
-      "parameters": {
-#             "batch_norm": {"values": [False]}, # False
-#             "dropout": {"values": [0.0, 0.1]}, # 0.0
-#             "negative_slope": {"values": [0.0, 0.01, 0.02, 0.05, 0.1]}, # 0.0
-            "lr": {"values": [5e-6, 1e-5, 2.5e-5, 5e-5, 1e-4]}, # 1e-5
-            "batch_size": {"values": [4, 8]},
-        }
-    }
+#     sweep_config = {
+#       "method": "grid",   # Random search
+#       "metric": {           # We want to maximize val_acc
+#           "name": "val_loss_epoch",
+#           "goal": "minimize"
+#       },
+#       "parameters": {
+# #             "batch_norm": {"values": [True, False]}, # False
+#             "dropout": {"values": [0.1, 0.2, 0.3, 0.4]}, # 0.0
+# #             "negative_slope": {"values": [0.0, 0.01, 0.02, 0.05, 0.1]}, # 0.0
+#             "lr": {"values": [1e-3]}, # 1e-5
+#             "batch_size": {"values": [2]},
+#         }
+#     }
     
-    sweep_id = wandb.sweep(sweep_config, project=WandbConfig.project_name)
-    wandb.agent(sweep_id, function=sweep_iteration)
+#     sweep_id = wandb.sweep(sweep_config, project=WandbConfig.project_name)
+#     wandb.agent(sweep_id, function=sweep_iteration)

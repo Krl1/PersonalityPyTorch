@@ -68,8 +68,30 @@ def create_conntected_dataset():
     with open(LocationConfig.new_data + 'test/test.pickle', 'wb') as handle:
         pickle.dump(images_dict_test, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-
+def create_only_val_dataset():
+    df = pd.read_csv(LocationConfig.labels + 'bigfive_my_labels.csv')
+    mean_df = df.set_index('VideoName')
+    
+    X_test = np.array(mean_df.index)
+    images_dict_test = {'X':[], 'Y':[]}
+    total_files = len(fnmatch.filter(os.listdir(LocationConfig.crop_data), '*.jpg'))
+    for image_path in tqdm(Path(LocationConfig.crop_data).glob('*.jpg'), total=total_files):
+        X = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE) 
+        X = np.expand_dims(X, axis=2) 
+        image_group = image_path.name.split('/')[-1]
+        Y = mean_df.loc[image_group].values
+        if CreateDataConfig.classification:
+            Y = list(np.where(Y>CreateDataConfig.Y_threshold, 1, 0))
+            
+        if image_group in X_test:
+            images_dict_test['X'].append(X)
+            images_dict_test['Y'].append(Y)
+            
+    with open(LocationConfig.new_data + 'test/test.pickle', 'wb') as handle:
+        pickle.dump(images_dict_test, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        
 if __name__ == "__main__":
-    create_new_data_directories()
-    if CreateDataConfig.connect:
-        create_conntected_dataset()
+#     create_new_data_directories()
+#     if CreateDataConfig.connect:
+#         create_conntected_dataset()
+    create_only_val_dataset()
