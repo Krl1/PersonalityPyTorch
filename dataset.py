@@ -27,10 +27,10 @@ class PersonalityDataset(Dataset):
     def __getitem__(self, index):
         image = self.faces_list['X'][index]
         label = self.faces_list['Y'][index]
-        normalized = PersonalityDataset._normalize(image.copy())
+        # normalized = PersonalityDataset._normalize(image.copy())
         return {
             "original": image, 
-            "normalized": normalized,
+            # "normalized": normalized,
             "label": label
         }
 
